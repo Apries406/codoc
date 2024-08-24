@@ -4,7 +4,7 @@ import { WebsocketProvider } from 'y-websocket';
 import * as Y from 'yjs';
 import * as WebSocket from 'ws';
 
-@WebSocketGateway()
+@WebSocketGateway({path: 'codoc'})
 export class YjsGateway { 
   @WebSocketServer() server: PropertyDecorator
   yDoc = new Y.Doc()

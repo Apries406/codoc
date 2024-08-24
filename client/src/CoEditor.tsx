@@ -1,6 +1,6 @@
-import { YjsEditor } from '@slate-yjs/core'
+import { withYjs, YjsEditor } from '@slate-yjs/core'
 import { useEffect, useMemo, useState } from 'react'
-import { BaseEditor, createEditor, Editor, Transforms } from 'slate'
+import {  createEditor, Editor, Transforms } from 'slate'
 import { Editable, Slate, withReact } from 'slate-react'
 import { WebsocketProvider } from 'y-websocket'
 import * as Y from 'yjs'
@@ -49,32 +49,32 @@ const SlateEditor = ({ sharedType, provider }) => {
 const CoEditor = () => {
 
   const [connected, setConnected] = useState(false)
-  const [shareType, setShareType] = useState<Y.XmlText>()
+  const [sharedType, setSharedType] = useState<Y.XmlText>()
   const [provider, setProvider] = useState<WebsocketProvider>()
 
   useEffect(() => {
     const yDoc = new Y.Doc()
     const sharedDoc = yDoc.get('shared', Y.XmlText)
 
-
     const yProvider = new WebsocketProvider('ws://localhost:7001', 'codoc', yDoc);
     
-    yProvider.on('connectUser', setConnected)
-    setShareType(sharedDoc)
+    yProvider.on('connect', setConnected)
+    console.log('Connected -- [' + yProvider.wsconnected + ']\n')
+    setSharedType(sharedDoc)
     setProvider(yProvider)
 
     return () => {
-      yDoc?.destroy()
-      yProvider?.off('disconnectUser', setConnected)
+      yProvider?.off('connect', setConnected)
+      yDoc?.destroy() 
       yProvider?.destroy()
     }
   },[])
 
-  if (!connected || !provider || !shareType) {
+  if (!connected || !provider || !sharedType) {
     return <div>Loading...</div>
   }
 
-  return <SlateEditor sharedType={shareType} provider={provider} />
+  return <SlateEditor sharedType={sharedType} provider={provider} />
 }
 
 export default CoEditor
