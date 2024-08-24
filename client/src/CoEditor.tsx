@@ -57,10 +57,9 @@ const CoEditor = () => {
     const sharedDoc = yDoc.get('shared', Y.XmlText)
 
 
-    const yProvider = new WebsocketProvider('ws://localhost:7001', 'codoc', yDoc)
+    const yProvider = new WebsocketProvider('ws://localhost:7001', 'codoc', yDoc);
     
     yProvider.on('connectUser', setConnected)
-    yProvider.
     setShareType(sharedDoc)
     setProvider(yProvider)
 
